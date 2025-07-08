@@ -12,22 +12,16 @@ This `Dockerfile` sets up a Python 3.10 environment with:
 ```dockerfile
 FROM python:3.10-slim
 
-WORKDIR /project
+WORKDIR /wbhk
 
 # Install system packages: git, compiler for pip packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    build-essential \
- && rm -rf /var/lib/apt/lists/*
+    git build-essential 
 
-# Install Python packages for VS Code Jupyter notebooks
 RUN pip install --no-cache-dir \
     ipykernel \
-    notebook \
-    jupyterlab
-    # add your own deps here, e.g., numpy, pandas, matplotlib, etc.
+    notebook
 
-# Register the kernel so VS Code can find it easily
-RUN python -m ipykernel install --user --name=project-kernel --display-name "Python 3.10 (Docker)"
+RUN python -m ipykernel install --user --name=wbhk-kernel --display-name "Python 3.10 (wbhk)"
 
 CMD ["bash"]
