@@ -1,0 +1,85 @@
+🐳 Minimal Docker Dev Setup & Image Sharing
+🧱 1. Initial Files
+📄 Dockerfile
+
+FROM python:3.10-slim
+WORKDIR /project
+CMD ["bash"]
+📄 docker-compose.yml
+
+services:
+  dev:
+    build: .
+    volumes:
+      - ./project:/project
+    working_dir: /project
+    stdin_open: true
+    tty: true
+
+🚀 2. Start Dev Environment
+bash
+
+docker compose build
+docker compose run --name wbhk-dev dev
+
+Interactive bash container
+
+Host ./project is mounted to /project
+
+🧠 3. End of Development
+✅ (Optional) Embed code from host into container
+bash
+
+docker cp ./project wbhk-dev:/project
+✅ Commit container → new image
+bash
+
+docker commit wbhk-dev wbhk-dev-final
+
+✅ Save final image to .tar
+bash
+
+docker save -o wbhk-dev.tar wbhk-dev-final
+
+💾 4. Freeze Dependencies
+bash
+
+pip freeze > requirements.txt
+(Optional — good practice, helpful for rebuilding later)
+
+🔁 5. Resume Work Later
+bash
+
+docker start -ai wbhk-dev
+📦 6. Friend Usage
+Friend loads image:
+bash
+
+docker load -i wbhk-dev.tar
+
+Option A — Minimal run:
+bash
+
+docker run -it --name wbhk-dev wbhk-dev-final
+
+Option B — Compose file:
+yaml
+
+services:
+  dev:
+    image: wbhk-dev-final
+    container_name: wbhk-dev
+    working_dir: /project
+    stdin_open: true
+    tty: true
+
+Then:
+
+bash
+
+docker compose run dev
+
+✅ All code and packages are inside the image
+✅ No volume needed
+✅ No build needed
+✅ Clean & portable
