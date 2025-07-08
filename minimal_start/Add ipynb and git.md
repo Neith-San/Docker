@@ -1,3 +1,5 @@
+`Don't recommended, chances of out of time. install dependencies inside the running container`
+
 ## 🐍 Dockerfile (with Jupyter + Git support)
 
 This `Dockerfile` sets up a Python 3.10 environment with:
