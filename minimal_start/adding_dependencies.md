@@ -1,7 +1,15 @@
-(* DOCKERFILE
-adding ipynb and git *)
+## 🐍 Dockerfile (with Jupyter + Git support)
 
+This `Dockerfile` sets up a Python 3.10 environment with:
 
+- Git
+- Build tools
+- Jupyter Notebook support
+- A named Jupyter kernel for use in VS Code
+
+### 📄 `Dockerfile`
+
+```dockerfile
 FROM python:3.10-slim
 
 WORKDIR /project
@@ -22,4 +30,4 @@ RUN pip install --no-cache-dir \
 # Register the kernel so VS Code can find it easily
 RUN python -m ipykernel install --user --name=project-kernel --display-name "Python 3.10 (Docker)"
 
-CMD [ "bash" ]
+CMD ["bash"]
