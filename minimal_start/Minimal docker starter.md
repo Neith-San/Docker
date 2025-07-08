@@ -39,6 +39,16 @@ docker compose run --name wbhk-dev dev
 - You’ll get an interactive bash shell inside the container.
 - The host's `./project` is mounted into `/project` inside the container.
 
+If you're building a reusable dev environment, you should prefer:
+
+```bash
+docker compose up -d
+```
+Then attach via:
+
+```css
+Ctrl+Shift+P → Remote-Containers: Attach to Running Container
+```
 ---
 
 ## 🧠 3. End of Development
