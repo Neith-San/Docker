@@ -83,3 +83,6 @@ docker compose run dev
 ✅ No volume needed
 ✅ No build needed
 ✅ Clean & portable
+
+
+then in vscode, attach to a running container. 
