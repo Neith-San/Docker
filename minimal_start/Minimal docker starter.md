@@ -74,7 +74,7 @@ pip freeze > requirements.txt
 ---
 
 ## 🔁 5. Resume Work Later
-
+Starting the container again
 ```bash
 docker start -ai wbhk-dev
 ```
@@ -82,7 +82,7 @@ docker start -ai wbhk-dev
 ---
 
 ## 📦 6. Share with a Friend
-
+Share the Tar file with the friend
 ### Load the image:
 
 ```bash
@@ -118,6 +118,16 @@ docker compose run dev
 ```
 
 ---
+
+---
+
+## 🧰 7. Extract Code from Image to Host (Optional)
+
+If you saved your container state into an image (e.g., `wbhk-dev-final`), your friend can extract the code from the container like this:
+
+1. Run a container from the image:
+   ```bash
+   docker run -it --name temp-dev wbhk-dev-final
 
 ### ✅ Benefits
 
