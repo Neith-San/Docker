@@ -20,6 +20,8 @@ CMD ["bash"]
 services:
   dev:
     build: .
+    image: wbhk-dev
+    container_name: wbhk-dev
     volumes:
       - ./project:/project
     working_dir: /project
