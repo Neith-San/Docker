@@ -1,0 +1,90 @@
+version: "3.9"
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Fixed: Point to actual Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /usr/src/app
+    volumes:
+      - ./_v3:/usr/src/app  # Your code syncs here
+      - model-cache:/home/dev/.cache  # Shared model cache
+    ports:
+      - "8000:8000"  # Django
+      - "8080:8080"  # Your custom port
+      - "8081:8081"  # Your custom port
+    shm_size: 8gb
+    tty: true
+    stdin_open: true
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
+    networks:
+      - app-network
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Fixed: Point to actual Dockerfile
+    # Fixed: Use _v3 as app name, add auto-reload for development
+    command: watchmedo auto-restart --directory=/usr/src/app --pattern="*.py" --recursive -- celery -A _v3 worker -l info
+    working_dir: /usr/src/app
+    volumes:
+      - ./_v3:/usr/src/app  # Same code as django
+      - model-cache:/home/dev/.cache  # Shared model cache
+    shm_size: 8gb
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
+    networks:
+      - app-network
+
+  # Optional: Celery monitoring
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A _v3 flower --port=5555
+    working_dir: /usr/src/app
+    volumes:
+      - ./_v3:/usr/src/app
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - celery
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"  # Fixed: Redis port goes here, not in django
+    networks:
+      - app-network
+
+volumes:
+  model-cache:  # Shared cache for HuggingFace models
+
+networks:
+  app-network:
+    driver: bridge
